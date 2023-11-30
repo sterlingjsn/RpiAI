@@ -1,0 +1,66 @@
+#Tools Needed
+SpeechRecognition- PyAudio
+NLTK
+gTTS
+
+#Installing AI Libraries and Tools
+sudo apt-get update
+sudo apt-get install python-pyaudio python3-pyaudio
+sudo apt-get install python-nltk
+sudo pip install SpeechRecognition
+sudo pip install gTTS
+
+#Creating the Speech Recognition Module
+def speech_recognition():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Say something...")
+        audio = r.listen(source)
+    try:
+        print("You said: " + r.recognize_google(audio))
+    except sr.UnknownValueError:
+        print("Sorry, I didn't understand that.")
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+
+#Creating the Natural Language Understanding Module
+import nltk
+nltk.download('punkt')
+from nltk.tokenize import word_tokenize
+
+def natural_language_understanding(speech):
+    tokens = word_tokenize(speech)
+    print("Tokens: " + str(tokens))
+
+#Creating the Speech Synthesis Module
+from gtts import gTTS
+import os
+
+def speech_synthesis(text):
+    tts = gTTS(text=text, lang='en')
+    tts.save("output.mp3")
+    os.system("mpg321 output.mp3")
+
+#Combining the Modules
+import speech_recognition as sr
+from nltk.tokenize import word_tokenize
+from gtts import gTTS
+import os
+
+def mobile_assistant():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Say something...")
+        audio = r.listen(source)
+    try:
+        speech = r.recognize_google(audio)
+        print("You said: " + speech)
+        tokens = word_tokenize(speech)
+        print("Tokens: " + str(tokens))
+        text = "Hello, how can I assist you?"
+        speech_synthesis(text)
+    except sr.UnknownValueError:
+        print("Sorry, I didn't understand that.")
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+
